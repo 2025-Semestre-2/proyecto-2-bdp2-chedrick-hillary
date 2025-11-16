@@ -1,0 +1,54 @@
+/* Fondo general del login */
+.login-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eef1f5;
+}
+
+/* Tarjeta del formulario */
+.login-card {
+  width: 360px;
+  padding: 35px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.1);
+}
+
+/* Título */
+.login-title {
+  margin-bottom: 25px;
+  text-align: center;
+  color: #1a1a1a;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+/* Campos de entrada */
+.login-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e0;
+  font-size: 15px;
+}
+
+/* Botón */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #4a6cf7;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.login-button:hover {
+  background: #3a55d4;
+}
