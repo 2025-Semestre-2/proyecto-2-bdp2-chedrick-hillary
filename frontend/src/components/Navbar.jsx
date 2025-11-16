@@ -11,8 +11,7 @@ const Navbar = () => {
       <div className="menu">
         <Link to="/">Inicio</Link>
 
-        {/* SOLO ADMINISTRADOR */}
-        {user?.role === "Administrador" && (
+        {user?.rol === "Admin" && (
           <>
             <Link to="/productos">Productos</Link>
             <Link to="/clientes">Clientes</Link>
@@ -21,8 +20,7 @@ const Navbar = () => {
           </>
         )}
 
-        {/* SOLO CORPORATIVO */}
-        {user?.role === "Corporativo" && (
+        {user?.rol === "Corporativo" && (
           <>
             <Link to="/estadisticas">Estadísticas</Link>
           </>

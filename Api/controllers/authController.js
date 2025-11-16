@@ -1,49 +1,52 @@
-const { sql, configCorporativa } = require("../database/connections");
+const crypto = require("crypto");
+const { poolCorporativa } = require("../database/connections");
 
-// -----------------------------
-// LOGIN BÁSICO SIN TOKEN
-// -----------------------------
-const login = async (req, res) => {
-    const { username, password } = req.body;
-
+exports.login = async (req, res) => {
     try {
-        if (!username || !password) {
-            return res.status(400).json({ message: "Faltan datos" });
-        }
+        const { username, password } = req.body;
 
-        // Conexión a Corporativa
-        const pool = await sql.connect(configCorporativa);
+        console.log("Login recibido:", username, password);
 
-        // Consulta a la vista de login
-        const result = await pool.request()
-            .input("username", sql.VarChar, username)
-            .input("password", sql.VarBinary, Buffer.from(password)) // lo convertimos a binario
+        const po = await poolCorporativa;
+
+        // HASH EXACTO SHA256 (varbinary en SQL)
+        const hash = crypto.createHash("sha256").update(password).digest();
+
+        console.log("Hash generado:", hash);
+
+        const result = await po.request()
+            .input("username", username)
+            .input("password", hash)
             .query(`
-                SELECT iduser, username, fullname, rol, active
+                SELECT 
+                    iduser,
+                    username,
+                    fullname,
+                    rol,
+                    idsucursal
                 FROM vw_UsuariosLogin
-                WHERE username = @username
-                  AND password = HASHBYTES('SHA2_256', @password)
+                WHERE username=@username AND password=@password
             `);
 
         if (result.recordset.length === 0) {
-            return res.status(401).json({ message: "Credenciales inválidas" });
+            return res.status(401).json({ mensaje: "Credenciales incorrectas" });
         }
 
-        const user = result.recordset[0];
+        const u = result.recordset[0];
 
-        if (user.active !== 1) {
-            return res.status(403).json({ message: "El usuario está inactivo" });
-        }
-
-        return res.json({
-            message: "Login exitoso",
-            user
+        res.json({
+            mensaje: "Login exitoso",
+            usuario: {
+                id: u.iduser,
+                username: u.username,
+                fullname: u.fullname,
+                rol: u.rol,
+                idsucursal: u.idsucursal
+            }
         });
 
-    } catch (err) {
-        console.error(" Error en login:", err);
-        return res.status(500).json({ message: "Error interno del servidor" });
+    } catch (error) {
+        console.error("Error en login:", error);
+        res.status(500).json({ mensaje: "Error interno" });
     }
 };
-
-module.exports = { login };

@@ -1,4 +1,12 @@
 /* GLOBAL RESET */
+:root {
+  --primary-color: #4a6cf7;
+  --secondary-color: #7b8fa1;
+  --danger-color: #e74c3c;
+  --background-glass: rgba(255, 255, 255, 0.55);
+  --backdrop-blur: blur(8px);
+}
+
 * {
   margin: 0;
   padding: 0;

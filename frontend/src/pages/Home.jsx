@@ -1,28 +1,22 @@
-import { useAuth } from "../context/AuthContext";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-const Home = () => {
-  const { user } = useAuth();
+export default function Home() {
+    const { user } = useContext(AuthContext);
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h1>Bienvenido</h1>
+    return (
+        <div style={{ padding: "40px" }}>
+            <h1>Bienvenido</h1>
 
-      {/* Mostrar rol en lugar de username */}
-      {user && (
-        <h3>Has iniciado sesión como: {user.role}</h3>
-      )}
-
-      {/* Contenido según rol */}
-
-      {user?.role === "Administrador" && (
-        <p>Puedes gestionar productos, clientes, proveedores y facturas.</p>
-      )}
-
-      {user?.role === "Corporativo" && (
-        <p>Puedes consultar estadísticas por sucursal o consolidadas.</p>
-      )}
-    </div>
-  );
-};
-
-export default Home;
+            {user ? (
+                <>
+                    <p>Has iniciado sesión como:</p>
+                    <h3>{user.fullname}</h3>
+                    <p><b>Rol:</b> {user.rol}</p>
+                </>
+            ) : (
+                <p>No hay usuario cargado</p>
+            )}
+        </div>
+    );
+}

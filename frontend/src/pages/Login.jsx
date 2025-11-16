@@ -1,23 +1,15 @@
+
+import "../styles/Login.css";  
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import "../styles/Login.css";  
 
 export default function Login() {
   const { login } = useAuth();
-
   const [form, setForm] = useState({ username: "", password: "" });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const username = form.username;   // 
-    let role = "Administrador";
-
-    if (username === "corporativo") {
-      role = "Corporativo";
-    }
-
-    login(username, role);
+    login(form.username, form.password);
   };
 
   return (
@@ -44,9 +36,7 @@ export default function Login() {
             style={styles.input}
           />
 
-          <button type="submit" style={styles.button}>
-            Entrar
-          </button>
+          <button type="submit" style={styles.button}>Entrar</button>
         </form>
       </div>
     </div>
