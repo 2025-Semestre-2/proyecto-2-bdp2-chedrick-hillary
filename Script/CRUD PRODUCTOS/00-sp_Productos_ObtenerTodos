@@ -1,0 +1,8 @@
+CREATE OR ALTER PROCEDURE sp_Productos_ObtenerTodos
+AS
+BEGIN
+    SELECT p.idProducto, p.nombre, p.precio, p.stock, pr.nombre AS proveedor
+    FROM Productos p
+    LEFT JOIN Proveedores pr ON p.idProveedor = pr.idProveedor;
+END
+GO

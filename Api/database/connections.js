@@ -1,7 +1,7 @@
-const sql = require("mssql");
+import sql from "mssql";
 
 // ==========================
-//  CONFIGS DE CADA SERVIDOR
+//  CONFIGURACIONES
 // ==========================
 const configCorporativa = {
     user: "sa",
@@ -38,9 +38,8 @@ const configSucursalLM = {
     }
 };
 
-
 // ==========================
-//  POOL CORPORATIVA
+//  POOLS
 // ==========================
 const poolCorporativa = new sql.ConnectionPool(configCorporativa)
     .connect()
@@ -50,31 +49,20 @@ const poolCorporativa = new sql.ConnectionPool(configCorporativa)
     })
     .catch(err => console.log(" Error conectando a Corporativa:", err));
 
-// ==========================
-//  POOL SJ
-// ==========================
 const poolSJ = new sql.ConnectionPool(configSucursalSJ)
     .connect()
     .then(pool => {
-        console.log(" Conectado a Sucursal SJ");
+        console.log(" Conectado a Sucursal San José");
         return pool;
     })
     .catch(err => console.log(" Error conectando a SJ:", err));
 
-// ==========================
-//  POOL LM
-// ==========================
 const poolLM = new sql.ConnectionPool(configSucursalLM)
     .connect()
     .then(pool => {
-        console.log(" Conectado a Sucursal LM");
+        console.log(" Conectado a Sucursal Limón");
         return pool;
     })
     .catch(err => console.log(" Error conectando a LM:", err));
 
-module.exports = {
-    sql,
-    poolCorporativa,
-    poolSJ,
-    poolLM
-};
+export { sql, poolCorporativa, poolSJ, poolLM };

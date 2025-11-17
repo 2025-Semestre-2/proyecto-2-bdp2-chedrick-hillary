@@ -10,7 +10,7 @@ body {
 /* Contenedor general */
 .container {
   padding: 40px;
-  
+
 }
 
 /* Títulos */
@@ -71,3 +71,5 @@ h3 {
 .logout-btn:hover {
   background: #2f855a;
 }
+
+

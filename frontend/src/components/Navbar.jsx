@@ -22,7 +22,11 @@ const Navbar = () => {
 
         {user?.rol === "Corporativo" && (
           <>
-            <Link to="/estadisticas">Estadísticas</Link>
+            <Link to="/estadisticas">Dashboard</Link>
+            <Link to="/inventario">Inventario</Link>
+            <Link to="/facturas">Facturas</Link>
+            <Link to="/clientes">Clientes</Link>
+            <Link to="/productos">Productos</Link>
           </>
         )}
       </div>

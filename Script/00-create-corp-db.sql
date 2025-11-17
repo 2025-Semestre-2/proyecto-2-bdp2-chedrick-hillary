@@ -21,6 +21,17 @@ CREATE TABLE Productos (
 );
 GO
 
+-----Estadisticas de ventas por sucursal
+CREATE TABLE Estadisticas (
+    idEstadistica INT IDENTITY PRIMARY KEY,
+    fecha DATETIME NOT NULL,
+    sucursal VARCHAR(20) NOT NULL, -- 'SJ', 'LM', 'CONS'
+    totalVentas DECIMAL(12,2),
+    totalFacturas INT,
+    totalClientes INT,
+    rowguid UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID()
+);
+
 -- Tabla de proveedores (CATÁLOGO REPLICADO)
 CREATE TABLE Proveedores (
     idProveedor INT PRIMARY KEY,
