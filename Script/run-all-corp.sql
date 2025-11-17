@@ -12,13 +12,11 @@ VALUES (
 );
 GO
 
-select * from Usuarios;
-
-
 ----------------------------------
 --- Vista para el login
 ----------------------------------
-CREATE VIEW vw_UsuariosLogin AS
+/*
+CREATE OR ALTER VIEW vw_UsuariosLogin AS
 SELECT 
     iduser,
     username,
@@ -28,7 +26,7 @@ SELECT
     active
 FROM Usuarios;
 GO
-
+*/
 ----------------------------------
 --- sp para el login 
 ----------------------------------

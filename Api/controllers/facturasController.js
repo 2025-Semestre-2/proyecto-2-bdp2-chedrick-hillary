@@ -1,44 +1,55 @@
-const sql = require('mssql');
-const db = require('../database/connections');
+const { poolSJ, poolLM } = require("../database/connections");
 
-module.exports = {
-    async getFacturasConsolidado(req, res) {
-        try {
-            const pool = await db;
-            const result = await pool.request().execute('sp_EstadisticasVentasConsolidado');
-            res.json(result.recordset);
-        } catch (err) {
-            res.status(500).json({ error: err.message });
-        }
-    },
+exports.obtenerFacturas = async (req, res) => {
+    try {
+        const { sucursal } = req.params;
+        const pool = sucursal === "SJ" ? await poolSJ : await poolLM;
 
-    async getFacturasBySucursal(req, res) {
-        try {
-            const { id } = req.params;
-            const pool = await db;
+        const result = await pool.request().query("SELECT * FROM vwFacturas");
+        res.json(result.recordset);
 
-            const result = await pool.request()
-                .input('sucursal', sql.VarChar, id)
-                .execute('sp_EstadisticasVentasSucursal');
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error obteniendo facturas" });
+    }
+};
 
-            res.json(result.recordset);
-        } catch (err) {
-            res.status(500).json({ error: err.message });
-        }
-    },
+exports.crearFactura = async (req, res) => {
+    try {
+        const { sucursal } = req.params;
+        const { fecha, idCliente, total } = req.body;
 
-    async getDetalleFactura(req, res) {
-        try {
-            const { idFactura } = req.params;
-            const pool = await db;
+        const pool = sucursal === "SJ" ? await poolSJ : await poolLM;
 
-            const result = await pool.request()
-                .input('idFactura', sql.Int, idFactura)
-                .execute('sp_DetalleFactura');
+        await pool.request()
+            .input("fecha", fecha)
+            .input("idCliente", idCliente)
+            .input("total", total)
+            .query(`
+                EXEC sp_Factura_Crear 
+                    @fecha=@fecha,
+                    @idCliente=@idCliente,
+                    @total=@total
+            `);
 
-            res.json(result.recordset);
-        } catch (err) {
-            res.status(500).json({ error: err.message });
-        }
+        res.json({ mensaje: "Factura creada correctamente" });
+
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error creando factura" });
+    }
+};
+
+exports.eliminarFactura = async (req, res) => {
+    try {
+        const { sucursal, id } = req.params;
+        const pool = sucursal === "SJ" ? await poolSJ : await poolLM;
+
+        const result = await pool.request()
+            .input("idFactura", id)
+            .query("EXEC sp_Factura_Eliminar @idFactura=@idFactura");
+
+        res.json(result.recordset);
+
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error eliminando factura" });
     }
 };

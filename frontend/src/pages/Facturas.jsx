@@ -1,17 +1,33 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
+import { useEffect, useState } from "react";
 
 export default function Facturas() {
+    const { user } = useAuth();
     const [facturas, setFacturas] = useState([]);
 
+    // Traducir idSucursal -> código del backend
+    const sucMap = {
+        1: "SJ",
+        2: "LM"
+    };
+
     useEffect(() => {
-        axios.get('/api/facturas/consolidado')
-            .then(r => setFacturas(r.data));
-    }, []);
+        if (!user || user.rol !== "Admin") return;
+
+        const sucursal = sucMap[user.idsucursal];
+
+        api.get(`/api/facturas/${sucursal}`)
+            .then(r => setFacturas(r.data))
+            .catch(err => console.error(err));
+    }, [user]);
+
+    if (!user) return <h2>No autenticado</h2>;
+    if (user.rol !== "Admin") return <h2>No tiene permisos</h2>;
 
     return (
         <div>
-            <h1>Facturas Consolidadas</h1>
+            <h1>Facturas de Sucursal {sucMap[user.idsucursal]}</h1>
             <table>
                 <thead>
                     <tr>
@@ -25,7 +41,7 @@ export default function Facturas() {
                     {facturas.map(f => (
                         <tr key={f.idFactura}>
                             <td>{f.idFactura}</td>
-                            <td>{f.fecha}</td>
+                            <td>{new Date(f.fecha).toLocaleString()}</td>
                             <td>{f.idCliente}</td>
                             <td>{f.total}</td>
                         </tr>
